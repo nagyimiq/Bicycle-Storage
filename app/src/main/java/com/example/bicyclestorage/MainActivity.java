@@ -11,21 +11,15 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -60,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
+    private Marker bicycleMarker;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -84,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         toolbar = findViewById(R.id.toolbar2);
         toolbarText = findViewById(R.id.toolbar_text);
 
-        // Toolbar kezdeti inicializálása a layout renderelése után
         toolbar.post(() -> {
             toolbar.setTranslationY(-toolbar.getHeight());
             toolbar.setVisibility(View.INVISIBLE);
@@ -104,39 +98,45 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(@NonNull GoogleMap googleMap) {
         myMap = googleMap;
 
-        myMap.addMarker(new MarkerOptions()
+        bicycleMarker = myMap.addMarker(new MarkerOptions()
                 .position(BICYCLE_STORAGE)
-                .icon(getResizedMarkerIcon(R.drawable.bicycle, 150, 150)));
+                .icon(getResizedMarkerIcon(R.drawable.bicycle, 150, 150))
+                .title("Biciklitároló")
+                .snippet("In use: 3/6"));
+
         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(BICYCLE_STORAGE, DEFAULT_ZOOM));
 
-        checkLocationSettings();
-
-        myMap.setOnMarkerClickListener(marker -> {
-            isToolbarVisible = !isToolbarVisible;
-            if (isToolbarVisible) {
-                // Toolbar megjelenítése animációval
-                toolbar.setVisibility(View.VISIBLE);
-                toolbar.setTranslationY(-toolbar.getHeight());
-                toolbar.animate()
-                        .translationY(0)
-                        .setDuration(300)
-                        .setListener(null) // Tisztítjuk a korábbi listener-t
-                        .start();
-
-                int occupied = 3;
-                String message = "In use: " + occupied + "/6";
-                toolbarText.setText(message);
-            } else {
-                // Toolbar elrejtése animációval
-                toolbar.animate()
-                        .translationY(-toolbar.getHeight())
-                        .setDuration(300)
-                        .withEndAction(() -> toolbar.setVisibility(View.INVISIBLE))
-                        .start();
+        myMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                if (!marker.equals(bicycleMarker)) return null;
+                View view = getLayoutInflater().inflate(R.layout.custom_info_window, null);
+                TextView infoText = view.findViewById(R.id.info_text);
+                infoText.setText(marker.getSnippet());
+                return view;
             }
+            @Override
+            public View getInfoContents(Marker marker) {
+                return null;
+            }
+        });
 
+        // EZ A RÉSZ KELL HOZZÁ:
+        myMap.setOnMarkerClickListener(marker -> {
+            if (marker.equals(bicycleMarker)) {
+                if (marker.isInfoWindowShown()) {
+                    marker.hideInfoWindow();
+                } else {
+                    int occupied = 3;
+                    marker.setSnippet("In use: " + occupied + "/6");
+                    marker.showInfoWindow();
+                }
+                return true;
+            }
             return false;
         });
+
+        checkLocationSettings();
     }
 
     private void checkLocationSettings() {
@@ -160,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             ResolvableApiException resolvable = (ResolvableApiException) e;
                             resolvable.startResolutionForResult(this, REQUEST_CHECK_SETTINGS);
                         } catch (IntentSender.SendIntentException sendEx) {
-                            // Ignore
                         }
                     }
                 });
@@ -171,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 == PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            Log.d("MainActivity", "Enabling My Location");
             myMap.setMyLocationEnabled(true);
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -208,7 +206,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onLocationResult(@NonNull LocationResult locationResult) {
                     for (Location location : locationResult.getLocations()) {
                         if (location != null) {
-                            Log.d("MainActivity", "Location updated: " + location.getLatitude() + ", " + location.getLongitude());
                         }
                     }
                 }
