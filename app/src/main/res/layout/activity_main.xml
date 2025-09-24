@@ -26,25 +26,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#4282F5"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/toolbar_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:layout_gravity="center" />
-        </androidx.appcompat.widget.Toolbar>
-
     </androidx.cardview.widget.CardView>
+
+    <include
+        android:id="@+id/custom_bubble"
+        layout="@layout/custom_info_window"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/button_container"
@@ -78,5 +65,4 @@
             android:textColor="#FFFFFF" />
 
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
