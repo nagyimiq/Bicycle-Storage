@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "302469478783",
+    "project_id": "bicycle-storage-cf1e3",
+    "storage_bucket": "bicycle-storage-cf1e3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302469478783:android:fbb3e59a6045b2f75a824a",
+        "android_client_info": {
+          "package_name": "com.example.bicyclestorage"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-oNrwg7mKtx94KS7pSuk8LCM2qcz-yHs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

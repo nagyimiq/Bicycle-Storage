@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp" android:height="36dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Lakat test - ugyanaz mint az eredeti -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M6,9c-1.11,0 -2,0.89 -2,2v9c0,1.11 0.89,2 2,2h12c1.11,0 2,-0.89 2,-2v-9c0,-1.11 -0.89,-2 -2,-2H6z"/>
+
+    <!-- Kengyel: ugyanaz a méret mint az eredetiben, de a jobb szár hiányzik -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M7,9V6c0,-2.76 2.24,-5 5,-5s5,2.24 5,5"/>
+</vector>

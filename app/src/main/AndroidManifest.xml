@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Opcionális: hálózat állapot figyelése (pl. login előtt) -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -16,15 +18,39 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BicycleStorage"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        android:usesCleartextTraffic="false">
+
+        <!-- Fő belépési pont -->
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="MissingClass">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Bejelentkezés (nem exportált, csak az app hívja) -->
+        <activity
+            android:name=".auth.LoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <!-- Regisztráció -->
+        <activity
+            android:name=".auth.RegisterActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <!-- Fiók (adat módosítás / kijelentkezés) -->
+        <activity
+            android:name=".auth.AccountActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <!-- Google Maps API kulcs (javasolt: kulcsot korlátozni IP / csomagnév + SHA-1 fingerprint alapján) -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAkzbLz06eOFc5MNG8hRX9C5pOIjOL6mMQ" />

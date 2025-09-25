@@ -10,7 +10,13 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+    plugins {
+        // Add ide a verziókat
+        id("com.android.application") version "8.5.2"
+        id("com.google.gms.google-services") version "4.4.2"
+    }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -19,6 +25,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Bicycle Storage"
+rootProject.name = "BicycleStorage"
 include(":app")
- 

@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Bicycle Storage</string>
+    <string name="lock_button_desc">Zár állapot váltása</string>
+    <string name="account_button_desc">Fiók adatok</string>
+    <string name="login">Bejelentkezés</string>
+    <string name="register">Regisztráció</string>
+    <string name="email">Email</string>
+    <string name="username">Felhasználónév</string>
+    <string name="password">Jelszó</string>
+    <string name="have_account">Van már fiókod? Jelentkezz be!</string>
+    <string name="no_account">Nincs fiókod? Regisztrálj!</string>
+    <string name="update">Mentés</string>
+    <string name="logout">Kijelentkezés</string>
+    <string name="change_password">Jelszó visszaállító email</string>
 </resources>
