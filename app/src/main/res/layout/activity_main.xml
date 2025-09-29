@@ -17,12 +17,12 @@
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
         app:cardBackgroundColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@id/button_container"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Rétegzett konténer a térkép + lakat gomb számára -->
+        <!-- Rétegzett konténer a térkép + lebegő gombok számára -->
         <FrameLayout
             android:id="@+id/map_container"
             android:layout_width="match_parent"
@@ -34,7 +34,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <!-- Lakat gomb (ImageButton – nincs Material háttér felülírás) -->
+            <!-- Bal alsó: Bicycle Storage ikon gomb (bicycle.png) -->
+            <ImageButton
+                android:id="@+id/storageButton"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_gravity="bottom|start"
+                android:layout_margin="16dp"
+                android:background="@drawable/bg_circle_primary"
+                android:src="@drawable/bicycle"
+                android:scaleType="centerInside"
+                android:elevation="10dp"
+                android:padding="12dp" />
+
+            <!-- Jobb alsó: Lakat gomb – marad a PIROS/ZÖLD váltás selectorral -->
             <ImageButton
                 android:id="@+id/lockButton"
                 android:layout_width="72dp"
@@ -48,11 +61,12 @@
                 android:padding="0dp"
                 android:elevation="10dp" />
 
+            <!-- Jobb felső: Account gomb -->
             <ImageButton
                 android:id="@+id/accountButton"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="top|end"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_gravity="top"
                 android:layout_margin="16dp"
                 android:background="@drawable/bg_account_circle"
                 android:src="@drawable/ic_account"
@@ -62,42 +76,10 @@
         </FrameLayout>
     </androidx.cardview.widget.CardView>
 
+    <!-- Egyedi info ablak (ha használod), marad -->
     <include
         android:id="@+id/custom_bubble"
         layout="@layout/custom_info_window"
         android:visibility="gone" />
-
-    <LinearLayout
-        android:id="@+id/button_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <Button
-            android:id="@+id/reset_button"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            android:text="BICYCLE STORAGE"
-            android:backgroundTint="#4282F5"
-            android:textColor="#FFFFFF" />
-
-        <Button
-            android:id="@+id/action_button"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:text="MY LOCATION"
-            android:backgroundTint="#4282F5"
-            android:textColor="#FFFFFF" />
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

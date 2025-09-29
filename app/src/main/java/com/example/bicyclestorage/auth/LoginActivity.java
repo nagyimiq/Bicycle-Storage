@@ -36,14 +36,14 @@ public class LoginActivity extends AppCompatActivity {
         if (regSuccess) {
             String prefill = intent.getStringExtra("prefill_email");
             if (prefill != null) emailField.setText(prefill);
-            // Itt – ha akarod – kijelentkeztetheted biztos ami biztos:
+            // If you want to be extra safe, sign out to avoid auto-redirect after registration:
             if (auth.getCurrentUser() != null) {
                 auth.signOut();
-                Log.d(TAG, "signOut a regisztrációs visszatéréskor");
+                Log.d(TAG, "Signed out after returning from registration");
             }
-            Toast.makeText(this, "Sikeres regisztráció! Jelentkezz be.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Registration successful! Please sign in.", Toast.LENGTH_LONG).show();
         } else {
-            // Normál autologin
+            // Normal auto-login
             if (auth.getCurrentUser() != null) {
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
@@ -60,16 +60,16 @@ public class LoginActivity extends AppCompatActivity {
         String email = emailField.getText().toString().trim();
         String pass  = passwordField.getText().toString().trim();
         if (email.isEmpty() || pass.isEmpty()) {
-            Toast.makeText(this, "Email és jelszó kell!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Email and password are required!", Toast.LENGTH_SHORT).show();
             return;
         }
         auth.signInWithEmailAndPassword(email, pass)
                 .addOnSuccessListener(res -> {
-                    Toast.makeText(this, "Sikeres bejelentkezés", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Signed in successfully.", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(this, MainActivity.class));
                     finish();
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(this, "Hiba: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                        Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show());
     }
 }

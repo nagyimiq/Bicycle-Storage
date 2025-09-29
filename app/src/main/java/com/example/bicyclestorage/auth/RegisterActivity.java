@@ -17,10 +17,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 /**
- * Regisztráció:
- *  - Felhasználó létrehozása (Firebase Auth)
- *  - Profil dokumentum létrehozása Firestore-ban (users/{uid})
- *  - Siker esetén kijelentkezés + vissza LoginActivity-re (email előtöltve)
+ * Registration flow:
+ *  - Create user (Firebase Auth)
+ *  - Create profile document in Firestore (users/{uid})
+ *  - On success, sign out and navigate back to LoginActivity (email prefilled)
  */
 public class RegisterActivity extends AppCompatActivity {
 
@@ -71,45 +71,45 @@ public class RegisterActivity extends AppCompatActivity {
 
         submitting = true;
         setUiEnabled(false);
-        Toast.makeText(this, "Regisztráció folyamatban...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Registration in progress...", Toast.LENGTH_SHORT).show();
 
         auth.createUserWithEmailAndPassword(email, pass)
                 .addOnSuccessListener(res -> {
                     if (res.getUser() == null) {
-                        fail("Ismeretlen auth hiba (user null)");
+                        fail("Unknown auth error (user null)");
                         return;
                     }
                     String uid = res.getUser().getUid();
                     Log.d(TAG, "Auth success uid=" + uid);
 
-                    // PROFIL létrehozás – csak SIKER után redirect + signOut
+                    // Create profile – only after SUCCESS redirect + signOut
                     repo.createUserProfile(uid, email, uname)
                             .addOnSuccessListener(unused -> {
-                                Log.d(TAG, "Profil mentve: " + uid);
+                                Log.d(TAG, "Profile saved: " + uid);
                                 doRedirectAfterProfile(email);
                             })
                             .addOnFailureListener(e -> {
-                                Log.e(TAG, "Profil mentési hiba: " + e.getMessage(), e);
-                                fail("Profil mentési hiba: " + e.getMessage());
+                                Log.e(TAG, "Profile save error: " + e.getMessage(), e);
+                                fail("Profile save error: " + e.getMessage());
                             });
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Auth hiba: " + e.getMessage(), e);
+                    Log.e(TAG, "Auth error: " + e.getMessage(), e);
                     if (e instanceof FirebaseAuthUserCollisionException) {
-                        fail("Ez az email már regisztrálva van. Jelentkezz be!");
+                        fail("This email is already registered. Please sign in!");
                     } else {
-                        fail("Regisztráció hiba: " + e.getMessage());
+                        fail("Registration error: " + e.getMessage());
                     }
                 });
     }
 
     private void doRedirectAfterProfile(String email) {
-        // Kijelentkeztetjük, hogy a LoginActivity ne lépjen tovább automatikusan
+        // Sign out so LoginActivity does not auto-forward
         if (auth.getCurrentUser() != null) {
             auth.signOut();
         }
 
-        Toast.makeText(this, "Sikeres regisztráció! Jelentkezz be.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Registration successful! Please sign in.", Toast.LENGTH_LONG).show();
 
         Intent i = new Intent(this, LoginActivity.class);
         i.putExtra("prefill_email", email);
@@ -123,27 +123,27 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean validate(String email, String pass, String uname) {
         if (uname.isEmpty()) {
-            usernameField.setError("Kötelező");
+            usernameField.setError("Required");
             usernameField.requestFocus();
             return false;
         }
         if (email.isEmpty()) {
-            emailField.setError("Kötelező");
+            emailField.setError("Required");
             emailField.requestFocus();
             return false;
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailField.setError("Érvénytelen email");
+            emailField.setError("Invalid email");
             emailField.requestFocus();
             return false;
         }
         if (pass.isEmpty()) {
-            passwordField.setError("Kötelező");
+            passwordField.setError("Required");
             passwordField.requestFocus();
             return false;
         }
         if (pass.length() < 6) {
-            passwordField.setError("Legalább 6 karakter");
+            passwordField.setError("At least 6 characters");
             passwordField.requestFocus();
             return false;
         }
